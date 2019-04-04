@@ -17,7 +17,6 @@ const tabs = [
 
 const TabExample = () => (
   <div className="flex1">
-    <WhiteSpace />
     <StickyContainer >
       <Tabs tabs={tabs}
         initalPage={'t2'}
@@ -35,7 +34,6 @@ const TabExample = () => (
         </div>
       </Tabs>
     </StickyContainer>
-    <WhiteSpace />
   </div>
 );
 

@@ -1,6 +1,9 @@
 import Styled from 'styled-components'
 
 const HeadStyled  = Styled.div `
+    position: sticky;
+    top:0px;
+    z-index:666;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -19,7 +22,7 @@ const HeadStyled  = Styled.div `
     padding: .1rem;
     line-height: .2rem;
     background-color: #000;
-    height:.4rem;
+    height:.45rem;
     i{
         width: 1.02rem;
         height: .2rem;

@@ -5,6 +5,10 @@ module.exports = function(app) {
     proxy('/mobileWeb', { 
       target: 'https://www.missevan.com/',
       changeOrigin: true,
+    }),
+    proxy('/sound', { 
+      target: 'https://www.missevan.com/',
+      changeOrigin: true,
     })
   )
 }
