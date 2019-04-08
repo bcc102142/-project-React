@@ -32,7 +32,7 @@ class swiper extends Component {
   render() {
     let list = this.props.data.info ? this.props.data.info.banner :[]
     return (
-      <SwiperStyled >
+      <SwiperStyled>
         <Carousel
           infinite={true}
           autoplay={true}

@@ -3,7 +3,6 @@ import Styled from 'styled-components'
 const ChannelStyled  = Styled.div`
 position: relative;
 width: 100%;
-paddingBottom: .16rem;
 margin: .1rem auto;
 height:2.3rem;
 background:transparent

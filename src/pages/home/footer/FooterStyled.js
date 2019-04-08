@@ -25,7 +25,7 @@ font-size: .14rem;
         background-position: -18px -325px;
         background-size: 365px 341px;
     }
-    button{
+    a{
         background: transparent;
         color: #9e9e9e;
         border: none;

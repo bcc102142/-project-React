@@ -4,25 +4,39 @@ const HeadStyled  = Styled.div `
     position: sticky;
     top:0px;
     z-index:666;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -moz-box-pack: justify;
-    -ms-flex-pack: justify;
     justify-content: space-between;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-    -moz-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
     padding: .1rem;
     line-height: .2rem;
     background-color: #000;
     height:.45rem;
+    .headInput{
+        width:2.75rem;
+        height:.3rem
+        input{
+            border:none;
+            padding-left:.3rem;
+            width:100%;
+            height:100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            border-radius:.1rem;
+        }
+        span{
+            display: block;
+            position: absolute;
+            top: .15rem;
+            left: .17rem;
+            width: .14rem;
+            height: .14rem;
+            background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.5a1ba5bd.png');
+            background-position: -309px -262px;
+            background-size: 365px 345px;
+            opacity: .3;
+        }
+    }
     i{
         width: 1.02rem;
         height: .2rem;
@@ -36,36 +50,156 @@ const HeadStyled  = Styled.div `
     
     }
     a{
-       
+       display:flex;
+       align-items:center;
         .search{
             width: .22rem;
             height: .2rem;
-            -webkit-background-size: 3.365px 341px;
-            -moz-background-size:  3.365px 341px;
             background-size: 365px 341px;
             background-position: -254px -287px;
             background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.22244f46.png');
             margin-right:.2rem
         }
-        .menu{
+        .headCansel{
+            margin-right:.2rem;
+            color: #fff;;
+        }
+        
+     
+    }
+    .menu{
             margin: 0;
             background-position: -230px -287px;
-            -webkit-box-flex: 0;
-            -webkit-flex: 0 1 auto;
-            -moz-box-flex: 0;
-            -ms-flex: 0 1 auto;
             flex: 0 1 auto;
             width: .22rem;
             height: .2rem;
             background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.22244f46.png');
-            -webkit-background-size: 365px 341px;
-            -moz-background-size: 365px 341px;
             background-size: 365px 341px;
-            
         }
-     
-    }
+
     
 `
 
-export default HeadStyled
+const SuggestItem = Styled.div`
+    display:${ props =>props.display }
+    position:absolute;
+    top:.45rem;
+    left:0;
+    width:100%;
+    height:6.22rem;
+    background:#f5f5f5;
+    z-index:999;
+    ul{
+        padding-left:.1rem;
+
+        li{
+            padding-top:.2rem;
+            a{
+                i{
+                    display: inline-block;
+                    position: relative;
+                    width: .13rem;
+                    height: .13rem;
+                    margin: 0 .1rem 0 0;
+                    background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.5a1ba5bd.png');
+                    background-position: -352px -164px;
+                    background-size: 365px 345px;
+                    vertical-align: top;
+                }
+            }
+        }
+    }
+`
+
+const AsideMenu = Styled.div`
+    position:absolute;
+    top:.45rem;
+    right:0;
+    width:100%;
+    transition:all 0.5s ;
+    height:${ props =>props.isshow ? '6.22rem' :0 };
+    background:#000;
+    z-index:777;
+    overflow:hidden;
+    .login{
+        height: 1.1rem;
+        padding: .2rem .3rem;
+        margin-bottom: .2rem;
+        width:100%;
+        background:#3d3d3d
+        div{
+            border-radius:.4rem;
+            overflow:hidden;
+            img{
+                width:.7rem;
+                height: .7rem;
+            }
+          
+        }
+        span{
+            padding-left:.2rem;
+            color:#fff;
+            font-size:.16rem
+        }
+        &::after{
+            position:absolute;
+            content:"";
+            display:block;
+            background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.5a1ba5bd.png');
+            background-position: -352px -220px;
+            background-size: 365px 345px;
+            height: .14rem;
+            width: .08rem;
+            right:.1rem;
+        }
+    }
+    .aStyle{
+        margin-bottom:1px;
+        width:100%;
+        height:.38rem;
+        padding-left:.36rem;
+        line-height:.36rem;
+        background:#3d3d3d;
+        color:#fff;
+        font-size:.16rem;
+        &::after{
+            position:absolute;
+            content:"";
+            display:block;
+            background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.5a1ba5bd.png');
+            background-position: -352px -220px;
+            background-size: 365px 345px;
+            height: .14rem;
+            width: .08rem;
+            right:.1rem;
+        }
+        &::before{
+            position:absolute;
+            content:"";
+            display:block;
+            height: .16rem;
+            width: .16rem;
+            left:.1rem
+
+        }
+    }
+    .toHome{
+        &::before{
+            background: url('//static.missevan.com/assets/m/images/build/sprite-svg.e8ca344d.svg') -2px -43px/82px 61px;
+        }
+    }
+    .alive{
+        &::before{
+            background: url('//static.missevan.com/assets/m/images/build/sprite-svg.e8ca344d.svg') -46px -2px/82px 61px;
+        }
+    }
+    .wallet{
+        &::before{
+            background: url('//static.missevan.com/assets/m/images/build/sprite-svg.e8ca344d.svg') -22px -43px/82px 61px;
+        }
+    }
+
+`
+
+
+export  {HeadStyled, SuggestItem,AsideMenu}

@@ -9,6 +9,19 @@ module.exports = function(app) {
     proxy('/sound', { 
       target: 'https://www.missevan.com/',
       changeOrigin: true,
+    }),
+    proxy('/explore', { 
+      target: 'https://www.missevan.com/',
+      changeOrigin: true,
+    }),
+    proxy('/drama', { 
+      target: 'https://www.missevan.com/',
+      changeOrigin: true,
+    }),
+    proxy('/dramaapi', { 
+      target: 'https://www.missevan.com/',
+      changeOrigin: true,
     })
+    
   )
 }

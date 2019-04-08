@@ -5,9 +5,9 @@ class Footer extends Component {
         return (
             <FooterStyled>
                 <div className="footer-top">
-                    <button>客户端</button>
+                    <a>客户端</a>
                     <i></i>
-                    <button>返回顶部</button>
+                    <a href='#top'>返回顶部</a>
                 </div>
                 <div className="footer-bottom">MissEvan弹幕音频网 京ICP备:14055174号-1</div>
             </FooterStyled>

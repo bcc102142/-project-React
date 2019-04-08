@@ -4,6 +4,8 @@ import {ChannelStyled} from './ChannelStyled'
 
 import Bscroll from 'better-scroll'
 
+import {withRouter} from 'react-router-dom'
+
 import {connect} from 'react-redux'
 
 const mapState = (state)=>{
@@ -15,6 +17,7 @@ const mapState = (state)=>{
 class ChannelO extends Component {
     constructor(props){
         super(props)
+        this.navClickHandler = this.navClickHandler.bind(this)
     }
     componentDidMount(){
         new Bscroll('#channel-body-scroll',{
@@ -22,12 +25,13 @@ class ChannelO extends Component {
             click:true
         })
     }
+    navClickHandler(){
+        this.props.history.push('/recommend/ranking')
+    }
     render() {
         // let list0 = this.state.data.music ? this.state.data.music[0].objects_point: []
         let list = this.props.data.info ?  this.props.data.info.sound :[]
-        console.log(list)
         return (
-            
             <ChannelStyled>
                 <div className="channel-title">
                     <div className="channel-title-head">
@@ -35,10 +39,10 @@ class ChannelO extends Component {
                         backgroundPosition: "-22px 0",
                         backgroundImage: "url('//static.missevan.com/assets/m/images/build/sprite-icons-catalog@2x.1144a958.png')"
                     }}></i>
-                        有声漫画
+                        人气M音
                     </div>
-                    <div className="channel-title-nav">
-                        更多
+                    <div className="channel-title-nav" onClick={this.navClickHandler}>
+                        排行榜
                     </div>
                 </div>
                 <div className="channel-body" id="channel-body-scroll">
@@ -48,7 +52,7 @@ class ChannelO extends Component {
                         margin : "0 .14rem"}}>
                 {
                     list.map((value)=>{
-                       return( <a href="#" key={value.id} style={{padding:"0 .1rem"}}>
+                       return( <a href={"/item/"+value.id} key={value.id} style={{padding:"0 .1rem"}}>
                             <img src={value.front_cover} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -67,4 +71,4 @@ class ChannelO extends Component {
     }
 }
 
-export default connect(mapState)(ChannelO)
+export default withRouter(connect(mapState)(ChannelO))

@@ -29,7 +29,7 @@ class OtherChannel extends Component {
                 {
                     list.map(function(value,index){
                         return (
-                            <a href="#" key={value.id}>
+                            <a href={"/channel/"+value.id} key={value.id}>
                             <div className="imgbox">
                                 <img style={{width:"100%" ,height: "100%"}} src={value.smallpic} alt=""/>
                                 <div className="commentQuantity">
