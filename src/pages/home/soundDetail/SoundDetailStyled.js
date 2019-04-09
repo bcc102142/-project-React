@@ -246,8 +246,7 @@ const SoundDetailStyled = Styled.div`
         }
         .channel-body-title{
             width: 100%;
-            height: .26rem;
-            word-break: break-all;
+            height: .20rem;
             text-overflow: ellipsis;
             overflow: hidden;
             box-orient: vertical;
@@ -256,10 +255,12 @@ const SoundDetailStyled = Styled.div`
             margin: 4px 0;
             color: #616161;
             font-size: .13rem;
+            padding-bottom:.05rem;
+            white-space: nowrap;
         }
         .channel-body-bottom{
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             span{
                 position: relative;
                 padding-left: .14rem;
@@ -457,13 +458,14 @@ const SoundDrama = Styled.a`
             flex-direction:column;
             justify-content:space-around
             span{
+                width:1.4rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 color: #9e9e9e;
                 font-size: .12rem;
             }
-            p{
+            p{  width:1.4rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -490,9 +492,15 @@ const SoundDrama = Styled.a`
 `
 
 const SoundCV = Styled.div`
+padding-top:.1rem;
 .cv-in-sound-list{
     display:flex;
+    flex-wrap:wrap;
+
+    height:${props => props.cvmore ==='更多' ?'1.1rem':'auto'}
+    overflow:hidden;
     .cv-in-sound{
+        width:25%;
         display:flex;
         flex-direction:column;
         justify-content:center;
@@ -507,6 +515,7 @@ const SoundCV = Styled.div`
             margin-top: 5px;
             font-size: .12rem;
             line-height: .18rem;
+            text-align:center;
         }
         span{
             height: .16rem;
@@ -515,13 +524,30 @@ const SoundCV = Styled.div`
             line-height: .16rem;
             overflow: hidden;
             text-align: center;
-            -o-text-overflow: ellipsis;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 }
-}
 
+}
+.expandBtn{
+    height:  .2rem;
+    display: block;
+    position: relative;
+    text-align: center;
+    border-radius: 3px;
+    &::before{
+        content: "";
+        display: block;
+        width: 8px;
+        height: 8px;
+        margin: 0 auto;
+        transform: rotate(-135deg);
+        border-top: 2px solid #9e9e9e;
+        border-left: 2px solid #9e9e9e;
+        transform:  ${props => props.cvmore === "更多" ? 'rotate(-135deg)' : 'rotate(45deg)'} ;
+    }
+}
 
 `
 
