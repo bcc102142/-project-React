@@ -10,9 +10,10 @@ const DetailStyled = Styled.div`
     text-align: center;
     font-size: .16rem;
     border-bottom: 1px solid #e0e0e0;
-    position: relative;
+    position: sticky;
     height: .4rem;
-    top: 0;
+    z-index:333;
+    top: .45rem;
     left: 0;
     right: 0;
 }

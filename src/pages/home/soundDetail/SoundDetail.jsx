@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
 
-import {SoundDetailStyled,BorderedSoundActionContainer,BorderedSoundInfo,BorderedSoundDrama,BorderedSoundCV} from './SoundDetailStyled'
+import {SoundDetailStyled,BorderedSoundActionContainer,BorderedSoundInfo,BorderedSoundDrama,BorderedSoundCV,BorderedCommentsItemBody} from './SoundDetailStyled'
 
 import http from 'utils/fetch'
+
+import { withRouter } from 'react-router-dom'
+
+import { connect } from 'react-redux'
+
+import request from 'utils/request';
+
+// import DetailComment from "./DetailComment/DetailComment"
+
+const mapState = (state)=>{
+    return {
+        info : state.isLogin.info
+    }
+}
 
 class SoundDetail extends Component {
     constructor(props){
@@ -12,11 +26,47 @@ class SoundDetail extends Component {
             data1 : [],
             otherInfo:{},
             cvmore:'更多',
-            soundlike:{}
+            soundlike:{},
+            isload:false,
+            index:0,
+            comments:{},
+            imgList:[]
         }
         this.clickHandler = this.clickHandler.bind(this)
         this.clickCVHandler = this.clickCVHandler.bind(this)
+        this.tabHandler = this.tabHandler.bind(this)
+        this.click = this.click.bind(this)
+        this.likeClick = this.likeClick.bind(this)
         this.fetchHandler()
+    }
+   async likeClick(){
+        //发送存的请求
+        //放用户信息
+        // let params = { ...this.props.info}
+        // console.log(params)
+        // params.like.push(this.state.data1.sound.id)
+        //去重
+        //  params.like = Array.from(new Set(params.like))
+        
+        let data = await this.updateItem({itemId:this.state.data1.sound.id,...this.props.info});
+
+        // console.log(this.state.data1.sound.id)
+
+    }
+    updateItem=(data)=>{
+        return request({
+            url:'/api/v1/users/item',
+            data,
+            type:'put',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded'
+            }
+        })
+    }
+    click(data){
+        this.props.history.push("/item/"+data)
+        window.location.reload()
+        
     }
    async fetchHandler(){
         let url = '/sound/getsound?soundid='+this.props.match.params.id
@@ -25,10 +75,32 @@ class SoundDetail extends Component {
         let data1 = await http.get(url1)
         let url2 = '/sound/getsoundlike?type=15&sound_id='+this.props.match.params.id
         let data2 = await http.get(url2)
+        let url3 = '/site/getcomment?order=3&type=1&eId='+this.props.match.params.id+'&p=1&pagesize=10'
+        let url4 = '/sound/getSortedImage?soundid='+this.props.match.params.id
+        let imgList =  await http.get(url4)
+
+
+        let comments = await fetch(url3,{
+            method:"POST",
+        　　headers: {
+            　　　　'Content-Type': 'application/x-www-form-urlencoded'
+        　　},
+        }).then(res =>res.json()).then(result=>result)
         this.setState({
             data1 : data.info,
             otherInfo:data1.info,
-            soundlike:data2.info
+            soundlike:data2.info,
+            comments:comments,
+            imgList:imgList
+        },function(){
+            this.setState({
+                isload:true
+            })
+        })
+    }
+    tabHandler(index){
+        this.setState({
+            index:index
         })
     }
     render() {
@@ -38,78 +110,142 @@ class SoundDetail extends Component {
         let drama =  this.state.otherInfo.drama ? this.state.otherInfo.drama :{}
         let recommenddramas =  this.state.soundlike.dramas ? this.state.soundlike.dramas :[]
         let sounds =  this.state.soundlike.sounds ? this.state.soundlike.sounds :[]
+        let num = this.state.comments.successVal ? this.state.comments.successVal.comment.num :''
+        let commentList = this.state.comments.successVal ? this.state.comments.successVal.comment.Datas :[]
+        let imgList = this.state.imgList.info ? this.state.imgList.info :[]
+
         return (
             <SoundDetailStyled value={this.state.value}>
+                {
+                    this.state.isload ?(<>
+                        
                 <div id="soundPlayer" > 
-                    <div className="imgBox"><img id="portrait-image" style={{width:"2.2rem",height:"2.2rem"}} src={sound.front_cover} alt=""/></div>
-                    <div className="soundController">
-                        <div className="btnPlay"></div>
-                    </div>
-                    <div className="progress-bar">
-                        <div className="played">   
-                            <div className="draggable"></div>
-                        </div>
-                    </div>
-                    <div className="soundTime">
-                        <i>0.00</i>
-                        <i style={{float:"right"}}>1.00</i>
-                    </div>
-                    <div className="soundPlayerBg" style={{background:`url(${sound.front_cover})` }}> </div>
+                <div className="imgBox"><img id="portrait-image" style={{width:"2.2rem",height:"2.2rem"}} src={sound.front_cover} alt=""/></div>
+                <div className="soundController">
+                    <div className="btnPlay"></div>
                 </div>
-                <BorderedSoundActionContainer >
-                    <ul>
-                        <li><i className="share"></i><span>分享</span></li>
-                        <li><i className="like"></i><span>喜欢</span></li>
-                        <li><i className="download"></i><span>下载</span></li>
-                    </ul>
-                    <div className="openInApp">用客户端打开</div>
-                </BorderedSoundActionContainer>
-                
-                <div className="soundTab">
-                    <ul>
-                        <li>简介</li>
-                        <li>评论</li>
-                        <li>图片</li>
-                    </ul>
+                <div className="progress-bar">
+                    <div className="played">   
+                        <div className="draggable"></div>
+                    </div>
                 </div>
-                <div className="tabContent">
-                    <div>
-                        <BorderedSoundInfo value={this.state.value}>
-                            <p>{sound.soundstr}</p>
-                            <ul>
-                                <li>{sound.view_count_formatted}</li>
-                                <li>{sound.all_comments}</li>
-                                <li>音频id:{sound.id}</li>
-                            </ul>
-                            <div className="infoBox">
-                            <div className="intro" dangerouslySetInnerHTML={{ __html: sound.intro }} />
-                                {/* <div className="intro">
-                                    <p>简介：</p>
-                                    <p>我真的很勤奋相信我（其实是为了下个星期不更新找借口）</p>
-                                    <p>这个抓当时看到画风就是心动的感觉了（加上是我推的要支持一下）</p>
-                                    <p>收到的时候立马就听了呜呜呜真的是慢悠悠的治愈真好。</p>
-                                    <p>——————喜欢请支持正版——————————</p>
-                                    
-                                    <p>「僕が恋をしたのは神様でした」<br/>この国には、魃(バツ)と呼ばれる神様がいる。<br/>少年テオが仕えるのは、夢のように美しい魃・レイ。<br/>血筋によって決められただけの主従関係だったが、次第にそれは恋心へと変わっていく。<br/>そばにいたいと思う気持ちは日増しに強くなり、熱い身体に触れることも、心地よく感じるようになった。<br/>しかし、魃は人間の数倍の速さで歳を取り、レイもまた、必ずテオより先に寿命を迎えるのだという――。<br/>これは移ろいゆく四季のなかでふたりの永遠を紡ぐ御伽噺。<br/>あおのなちが描く、あたたかくて切ない、神様×健気な少年の恋路をドラマCD化！<br/>巡る四季の情景と共に深まる愛をお楽しみください。<br/></p>
+                <div className="soundTime">
+                    <i>0.00</i>
+                    <i style={{float:"right"}}>1.00</i>
+                </div>
+                <div className="soundPlayerBg" style={{background:`url(${sound.front_cover})` }}> </div>
+            </div>
+            <BorderedSoundActionContainer >
+                <ul>
+                    <li><i className="share"></i><span>分享</span></li>
+                    <li><i className="like"  onClick={this.likeClick}></i><span>喜欢</span></li>
+                    <li><i className="download"></i><span>下载</span></li>
+                </ul>
+                <div className="openInApp">用客户端打开</div>
+            </BorderedSoundActionContainer>
+            
+            <div className="soundTab">
+                <ul>
+                    <li onClick={()=>{this.tabHandler(0)}} className={ this.state.index ===0 ? "active" :""}>简介</li>
+                    <li onClick={()=>{this.tabHandler(1)}} className={ this.state.index ===1 ? "active" :""}>评论{'('+num+')'}</li>
+                    <li onClick={()=>{this.tabHandler(2)}} className={ this.state.index ===2 ? "active" :""}>图片</li>
+                </ul>
+            </div>
 
-                                    <p>【出演者】テオ（受）：斉藤壮馬、</p>
-                                    <p>レイ（攻）：興津和幸</p>
-                                </div> */}
-                               <span onClick={this.clickHandler}>{this.state.value}</span>
-                            </div>
-                        </BorderedSoundInfo>
-                        <BorderedSoundDrama href="/drama/20542">
-                            <div><img style={{height:".6rem",width:".6rem"}} src={drama.cover} alt=""/></div>
-                            <div className="soundDramaRight">
-                                <div className="soundDramaRightText">
-                                    <p>{drama.name}</p>
-                                    <span>{drama.catalog_name} 类型：{drama.type_name}</span>
-                                    <span>更新至 {drama.newest}</span>
+{/* 图片 */}
+            <div  className={ this.state.index ===2 ? "imgContent" :"imgContent active"}>
+                        {
+                            imgList.map(value=>{
+                                return (
+                                    <div key={value.id}><img style={{width:"100%",height:"100%"}} src={value.front_cover} alt=""/></div>
+                                )
+                            })
+                           
+                        }
+            </div>
+
+
+
+
+
+{/* 评论 */}
+            <div className={ this.state.index ===1 ? "test" :"test active"}>
+                 <div id="comments">
+                        {
+                            commentList.map((value)=>{
+                                return (
+                                    <div className="commentsItem" key={value.id}>
+                                        <div><img style={{height:".4rem",width:".4rem",borderRadius: "50%"}} src={value.icon} alt=""/></div>
+                                        <BorderedCommentsItemBody >
+                                        <div className="commentsItemRight" >
+                                            <p>{value.username}</p>
+                                            <span>{value.ctime}</span>
+                                            <i>{value.comment_content}</i>
+                                        </div>
+                                        <div className="commentsItemCompliment">{value.like_num}</div>
+                                            {
+                                             value.sub_comment_num ?(
+                                                
+                                                <ul>
+                                                    {
+                                                        value.subcomments.map((value1)=>{
+                                                            return (
+                                                                <li key={value1.id}>
+                                                                    <a className="commentUser" href="#">{value1.username}</a>
+                                                                    <div className="commentTime">{value1.ctime}</div>
+                                                                    <div className="commentContent">{value1.comment_content}</div>
+                                                                </li>
+                                                            )
+                                                        })
+                                                       
+                                                    }
+                                                    
+                                                </ul>
+                                             ):('')
+                                            }
+                                        
+                                        </BorderedCommentsItemBody>
+                                    </div>
+                                )
+                            })
+                        }
+
+                      
+                 </div>       
+            </div>
+{/* 简介 */}
+            <div className={ this.state.index ===0 ? "tabContent" :"tabContent  active"}>
+                <div>
+                    <BorderedSoundInfo value={this.state.value}>
+                        <p>{sound.soundstr}</p>
+                        <ul>
+                            <li>{sound.view_count_formatted}</li>
+                            <li>{sound.all_comments}</li>
+                            <li>音频id:{sound.id}</li>
+                        </ul>
+                        <div className="infoBox">
+                        <div className="intro" dangerouslySetInnerHTML={{ __html: sound.intro }} />
+                           <span onClick={this.clickHandler}>{this.state.value}</span>
+                        </div>
+                    </BorderedSoundInfo>
+                        {
+                            Object.keys(drama).length !== 0 ? (
+                                <BorderedSoundDrama href="/drama/20542">
+                                <div><img style={{height:".6rem",width:".6rem"}} src={drama.cover} alt=""/></div>
+                                <div className="soundDramaRight">
+                                    <div className="soundDramaRightText">
+                                        <p>{drama.name}</p>
+                                        <span>{drama.catalog_name} 类型：{drama.type_name}</span>
+                                        <span>更新至 {drama.newest}</span>
+                                    </div>
+                                    <div className="soundDramaRightBtn">追剧</div>
                                 </div>
-                                <div className="soundDramaRightBtn">追剧</div>
-                            </div>
-                        </BorderedSoundDrama>
-                        <BorderedSoundCV cvmore={this.state.cvmore}>
+                            </BorderedSoundDrama>
+                            ):('')
+                        }
+                    {
+                       cv.length !==0 ? (
+                            <BorderedSoundCV cvmore={this.state.cvmore}>
                             <h4>参演CV</h4>
                             <div className="cv-in-sound-list">
                                 {
@@ -127,62 +263,78 @@ class SoundDetail extends Component {
                             </div>
                             <span onClick={this.clickCVHandler} className="expandBtn"></span>
                         </BorderedSoundCV>
+                        ) :""
+                    }
+                   
 
-                        <BorderedSoundDrama href="/drama/20542">
-                            <div><img style={{height:".6rem",width:".6rem",borderRadius:"50%"}} src={user.icon} alt=""/></div>
-                            <div className="soundDramaRight">
-                                <div className="soundDramaRightText">
-                                    <p>{sound.username}</p>
-                                    <span>发布于：2019/01/09 17:28</span>
-                                </div>
-                                <div className="soundDramaRightBtn">关注</div>
+                    <BorderedSoundDrama href="/drama/20542">
+                        <div><img style={{height:".6rem",width:".6rem",borderRadius:"50%"}} src={user.icon} alt=""/></div>
+                        <div className="soundDramaRight">
+                            <div className="soundDramaRightText">
+                                <p>{sound.username}</p>
+                                <span>发布于：2019/01/09 17:28</span>
                             </div>
-                        </BorderedSoundDrama>
-
-                        <div className="soundRelative">
-                            <div className="channel-title">
-                                <div className="channel-title-head">
-                                    音频相关
-                                </div>
-                            </div>
-                            <div className="sound-block">
-                                <p>剧集推荐</p>
-                                <div className="sound-block-recommend">
-                                {
-                                    recommenddramas.map(value =>{
-                                        return (
-                                            <a href="#" key={value.id}>
-                                                <div><img style={{width:"1.05rem",height:"1.36rem"}} src={value.front_cover} alt=""/></div>
-                                                <span>{value.name}</span>
-                                            </a>
-                                        )
-                                    })
-                                }
-                                </div>
-                            </div>
-                            <div className="sound-block">
-                                <p>相似音频</p>
-                                <div className="sound-block-like">
-                                {
-                                    sounds.map(value=>{
-                                        return (
-                                            <a href="#" key={value.id}>
-                                                <img  src={value.front_cover} alt=""/>
-                                                <div className="channel-body-title">{value.soundstr}</div>
-                                                <div className="channel-body-bottom">
-                                                    <span className="channel-body-palytimes">{value.view_count}</span>
-                                                    <span className="channel-body-comments">{value.all_comments}</span>
-                                                </div>
-                                            </a>
-                                        )
-                                    })
-                                }
-                                </div>
-                            </div>
-
+                            <div className="soundDramaRightBtn">关注</div>
                         </div>
+                    </BorderedSoundDrama>
+
+                    <div className="soundRelative">
+                        <div className="channel-title">
+                            <div className="channel-title-head">
+                                音频相关
+                            </div>
+                        </div>
+
+                        {
+                          recommenddramas.length !==0 ?(
+                            <div className="sound-block">
+                            <p>剧集推荐</p>
+                            <div className="sound-block-recommend">
+                            {
+                                recommenddramas.map(value =>{
+                                    return (
+                                        <a href="#" key={value.id}>
+                                            <div><img style={{width:"1.05rem",height:"1.36rem"}} src={value.front_cover} alt=""/></div>
+                                            <span>{value.name}</span>
+                                        </a>
+                                    )
+                                })
+                            }
+                            </div>
+                        </div>
+                          ):('') 
+                        }
+                       
+
+
+                        <div className="sound-block">
+                            <p>相似音频</p>
+                            <div className="sound-block-like">
+                            {
+                                sounds.map(value=>{
+                                    return (
+                                        <a onClick={(data)=>this.click(value.id)} key={value.id}>
+                                            <img  src={value.front_cover} alt=""/>
+                                            <div className="channel-body-title">{value.soundstr}</div>
+                                            <div className="channel-body-bottom">
+                                                <span className="channel-body-palytimes">{value.view_count}</span>
+                                                <span className="channel-body-comments">{value.all_comments}</span>
+                                            </div>
+                                        </a>
+                                    )
+                                })
+                            }
+                            </div>
+                        </div>
+
                     </div>
                 </div>
+            </div>
+                    </>):(<img src="https://static.missevan.com/mimages/201603/29/f6b4a63596f56f2bc77d4fb467cab85c160911.gif
+                " alt=""/>)
+                }
+
+
             </SoundDetailStyled>
         );
     }
@@ -212,4 +364,4 @@ class SoundDetail extends Component {
 
 }
 
-export default SoundDetail;
+export default withRouter(connect(mapState)(SoundDetail));

@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 
-import {DetailStyled} from './DetailStyled'
-
-import Drama from './drama/Drama'
-
-import Other from './other/Other'
+import DetailUI from './DetailUI'
 
 class Detail extends Component {
     constructor(props){
@@ -16,34 +12,25 @@ class Detail extends Component {
         switch(params){
             case "drama" : 
             title = "广播剧";break;
-            case "cartoon" : 
+            case "46" : 
             title = "有声漫画";break;
-            case "music" : 
+            case "8" : 
             title = "音乐";break;
-            case "hypnosis" : 
+            case "54" : 
             title = "催眠";break;
-            case "amusement" : 
+            case "26" : 
             title = "娱乐";break;
-            case "dayCatch" : 
+            case "41" : 
             title = "日抓";break;
-            case "Lbooks" : 
+            case "6" : 
             title = "听书";break;
-            case "dub" : 
+            case "52" : 
             title = "配音";break;
-            case "ring" : 
+            case "65" : 
             title = "铃声";break;
         }
         return (
-            <DetailStyled>
-                <div className="detail-head">{title}</div>{
-                    params === 'drama' ?(<div className="two-butoon" >
-                    <a href="#" className="updateTime">更新时间</a>
-                    <a href="#" className="filter">分类筛选</a>
-                </div>) :""
-                }
-                 { params === 'drama' ? <Drama></Drama> : <Other></Other>}
-                
-            </DetailStyled>
+            <DetailUI title={title} params={params}></DetailUI>
         );
     }
 }

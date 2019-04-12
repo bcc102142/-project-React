@@ -3,6 +3,7 @@ import Styled from 'styled-components'
 import border from 'components/styled/border.js'
 
 const SearchStyled  = Styled.div`
+height:5rem;
 .searchContent{
     display:flex;
     flex-wrap:wrap;

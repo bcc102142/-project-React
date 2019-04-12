@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
-import { RankingStyled } from './RankingStyled'
-
 import http from 'utils/fetch'
 
+import { withRouter } from 'react-router-dom'
+
+import RankingUI from './RankingUI'
 class Ranking extends Component {
     constructor(props){
         super(props)
@@ -11,6 +12,7 @@ class Ranking extends Component {
             list :[],
             isload:false
         }
+        this.preventDefault =this.preventDefault.bind(this)
         this.fetchHandler()
     }
    async fetchHandler(){
@@ -23,47 +25,17 @@ class Ranking extends Component {
         })
     })
     }
+
+    preventDefault(value){
+        this.props.history.push("/album/"+value)
+    }
     render() {
         let list = this.state.list ? this.state.list :[]
-        console.log(list)
         return (
+            <RankingUI {...this.state} click={this.preventDefault} ></RankingUI>
             
-            <RankingStyled>
-               <div className="detail-head">排行榜</div>
-               {
-                   this.state.isload ?(
-                    list.map(function(value){
-                        return (
-                         <a href={"/album/"+value.album.id} className="ranking-body" key={value.album.id}>
-                         <div className="ranking-item">
-                             <div className="ranking-item-img">
-                                 <div className="ranking-item-img-box"><img style={{height:"1.1rem",width:"1.1rem",borderRadius: '4px'}} src={"//static.missevan.com/coversmini/"+value.album.cover_image} alt=""/></div>
-                                 <span>10</span>
-                             </div>
-                             <div className="ranking-item-list">
-                                 {
-                                    value.sounds ? value.sounds.map(function(value){
-                                        return (
-                                            <div key={value.id}>
-                                                {value.soundstr}
-                                            </div>
-                                        )
-                                    }) :""
-                                 }
-                             </div>
-                         </div>
-                         </a>
-                        )
-                    })
-                   ): (<img src="https://static.missevan.com/mimages/201603/29/f6b4a63596f56f2bc77d4fb467cab85c160911.gif
-                   " alt=""/>)
-                
-               }
-            
-           
-            </RankingStyled>
         );
     }
 }
 
-export default Ranking;
+export default withRouter(Ranking);

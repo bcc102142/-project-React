@@ -1,105 +1,138 @@
 import React, { Component } from 'react';
 
-import {HeadStyled,SuggestItem,AsideMenu} from './HeadStyled'
-
 import { withRouter } from 'react-router-dom'
 
-import { HotSearch,BorderHotSearch } from '.././search/SearchStyled'
-
 import http from 'utils/fetch'
+
+import HeadUI from './HeadUI'
+
+import req from "utils/req"
+
+import _ from 'lodash'
+
+import { connect } from 'react-redux'
+
+import { setUserInfoSync,setUserInfoAsync } from './actionCreator'
+
+const mapState = (state)=>{
+    return {
+        isLogin:state.isLogin.isLogin,
+        urlParams:state.urlParams.urlParams
+    }
+}
+
+const mapDispatch = (dispatch)=>{
+    return {
+        setLoginHandler(){
+          dispatch({
+            type:"getState",
+            isLogin:true
+          })
+        },
+        setUserInfo(data){
+            dispatch({
+                type:"setUserInfo",
+                info:data
+            })
+        }
+    }
+  }
 
 class Head extends Component {
     constructor(props){
         super(props)
         this.state ={
-            value :(new URLSearchParams(this.props.location.search)).get("s") || '',
+            value : props.location.pathname.split('/')[2] || '' ,
             display:'none',
             list : [],
             isshow:false,
+            userinfo:{}
+            
         }
+        if(localStorage.getItem('token')){
+            this.props.setLoginHandler()
+        }
+        
+
         this.clickHandler = this.clickHandler.bind(this)
         this.changeHandler = this.changeHandler.bind(this)
+        // this.inputHandler = _.debounce(this.inputHandler.bind(this), 100)
         this.inputHandler = this.inputHandler.bind(this)
         this.menuClickhandler = this.menuClickhandler.bind(this)
+        this.preventDefault =this.preventDefault.bind(this)
+        this.preventDefault1 =this.preventDefault1.bind(this)
+        this.homeHandler =this.homeHandler.bind(this)
+        this.loginHandler = this.loginHandler.bind(this)
+
+        
+     
+
 
     }
+    async componentDidMount(){
+        
+        let data = await this.getUserInfo()
+        this.setState({
+            userinfo:data
+        },function(){
+            this.props.setUserInfo(this.state.userinfo)
+        })
+        
+    }
     render() {
-        let path = this.props.location.pathname;
+        
+        // let paramsId = props.location.pathname.split('/')[2]
+        let path = this.props.location.pathname.indexOf('/search');
         let that = this
         return (
-            <HeadStyled isshow={this.state.isshow}>
-                { 
-                   (function name(params) {
-                    switch(path){
-                        case "/search" : return  <div className="headInput"><span></span><input type="text" onInput={that.inputHandler} onChange={that.changeHandler}  value={that.state.value}/></div>
-                        case "/searchItem" : return  <div className="headInput"><span></span><input type="text"  onInput={that.inputHandler} onChange={that.changeHandler} value={that.state.value}/></div>
-                        default : return <i onClick={that.clickHandler} ></i>
-                    }
-                   })()
-                }
-                <div style={{display:"flex"}}>
-                <a href="/search">
-                {
-                    (function name(params) {
-                        switch(path){
-                            case "/search" : return  <a href="/" className="headCansel" >取消</a>
-                            case "/searchItem" : return  <a href="/" className="headCansel" >取消</a>
-                            default : return  <i className="search"></i>
-                        }
-                       })()
-                }
-                </a>
-                <i className="menu"  onClick={this.menuClickhandler}></i>
-                </div>
-                <SuggestItem display={this.state.display}>
-                    <HotSearch><BorderHotSearch>搜索:'{this.state.value}'</BorderHotSearch></HotSearch>
-                    <ul>
-                        {   
-                            this.state.list.map(function(value){
-                               let data = encodeURIComponent(value)
-                            return (
-                                <li key={value}><a href={"/searchItem?s="+ data}><i></i><span>{value}</span></a></li>
-                                )
-                            })
-                        }
-                    </ul>
-                </SuggestItem>
-                    <AsideMenu  isshow={this.state.isshow}>
-                        <a href="#" className="login">
-                            <div><img src="//static.missevan.com/assets/images/home/default-icon.jpg" alt=""/></div>
-                            <span>点击登陆</span>
-                        </a>
-                        <a href="/" className="aStyle toHome" >
-                            M-主站
-                        </a>
-                        <a href="/" className="aStyle alive">
-                            M-直播
-                        </a>
-                        <a href="/" className="aStyle wallet">
-                            M-钱包
-                        </a>
-                    </AsideMenu>   
-            </HeadStyled>
+            <HeadUI  loginHandler={this.loginHandler} homeHandler={this.homeHandler} {...this.state} {...this.props} path={path} click1={this.preventDefault1} click={this.preventDefault} clickHandler={this.clickHandler} changeHandler={this.changeHandler} menuClickhandler={this.menuClickhandler} inputHandler={this.inputHandler} ></HeadUI>
         );
     }
+    
+    preventDefault(e){
+        e.preventDefault()
+        this.props.history.push("/search")
+    }
+    preventDefault1(e,value){
+        this.setState({
+            value : value,
+            display:'none'
+        })
+        this.props.history.push("/searchItem/"+ encodeURIComponent(value))
+        window.location.reload()
+    }
+    loginHandler(data){
+        this.setState({
+            isshow:false
+        })
+        this.props.history.push(data)
+        if(data==='/alreadylogin'){
+            window.location.reload()
+        }
+    }
     clickHandler(){
-        this.props.history.push('/')
+        this.props.history.push("/")
+    }
+    homeHandler(){
+        this.setState({
+            isshow:false
+        })
+        this.props.history.push("/")
     }
     changeHandler(e){
         this.setState({
-            value : e.target.value
+            value : window.event.target.value
         })
     }
     menuClickhandler(){
-        console.log(this.state.isshow.toString())
         this.setState({
             isshow:!this.state.isshow
         })
     }
-    inputHandler(e){
+    inputHandler(){
         //改变输入框状态
         this.setState({
-            value : e.target.value,
+            value : window.event.target.value,
             display:'block'
         },function(){
              //请求数据
@@ -112,6 +145,11 @@ class Head extends Component {
         })
        
     }
+    getUserInfo(){
+        return req({
+            url: '/api/v1/users/info'
+        })
+    }
    async fetchHandler(){
        let url = '/sound/suggest?s='+this.state.value
        let data = await http.get(url)
@@ -121,4 +159,4 @@ class Head extends Component {
    }
 }
 
-export default withRouter(Head);
+export default   withRouter(connect(mapState,mapDispatch)(Head)) ;

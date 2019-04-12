@@ -4,6 +4,93 @@ import border from 'components/styled/border.js'
 
 
 const SoundDetailStyled = Styled.div`
+
+.imgContent{
+    &.active{
+                display:none
+            }
+    display:flex;
+    flex-wrap:wrap;
+    div{
+        width:33%;
+        padding:.1rem;
+    }
+}
+
+
+.test{
+    &.active{
+                display:none
+            }
+     padding-top:.1rem;
+    .commentsItem{
+        display:flex;
+        padding:.15rem;
+        padding-right:0;
+        position:relative;
+       
+        .commentsItemCompliment{
+            position:absolute;
+            top:.15rem;
+            right:.05rem;
+            height: .16rem;
+            line-height: .16rem;
+            padding-left: .2rem;
+            font-size: .11rem;
+            color: #757575;
+            cursor: pointer;
+            &::before{
+                content: "";
+                position: absolute;
+                top: -1px;
+                left: 0;
+                width: 16px;
+                height: 16px;
+                background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.db0ede62.png');
+                background-position: -367px -223px;
+                background-size: 392px 375px;
+            }
+        }
+        ul{
+            position: relative;
+            list-style-type: none;
+            background-color: #ededed;
+            border-radius: 6px;
+            margin-top: .16rem;
+            padding: .12rem;
+            &::before{
+                content: "";
+                position: absolute;
+                top: -.12rem;
+                left: .16rem;
+                width: 0;
+                height: 0;
+                border: 6px solid transparent;
+                border-bottom-color: #ededed;
+            }
+            li{
+                padding-bottom:.1rem;
+                a{
+                    color:#3d3d3d;
+                    font-size: 12px;
+                    text-decoration: none;
+                    vertical-align: top;
+                }
+                .commentTime{
+                    font-size: 11px;
+                    color: #b3b3b3;
+                    float:right;
+                }
+                .commentContent{
+                    padding-top: 6px;
+                    word-break: break-all;
+                    color: #757575;
+                }
+            }
+        }
+    }
+}
+
 #soundPlayer{
     height: 3.25rem;
     display:flex;
@@ -139,7 +226,8 @@ const SoundDetailStyled = Styled.div`
                 align-items:center;
                 justify-content:center;
                 position:relative;
-                &::after{
+                &.active{
+                    &::after{
                     content: "";
                     width: .74rem;
                     height: 100%;
@@ -151,12 +239,15 @@ const SoundDetailStyled = Styled.div`
                     color: #c14a3f;
                     border-color: #c14a3f;
                 }
+                }
             }
         }
     }
     .tabContent{
             padding : .12rem
-        
+            &.active{
+                display:none
+            }
 
                 }
             }
@@ -551,6 +642,46 @@ padding-top:.1rem;
 
 `
 
+const CommentsItemBody = Styled.div`
+            display:flex;
+            flex-direction:column;
+            flex:1;
+            padding-bottom:.1rem;
+    .commentsItemRight{
+            display:flex;
+            flex-direction:column;
+            padding-left:.1rem;
+            justify-content:space-around;
+            flex:1;
+            p{
+                display: inline-block;
+                color: #757575;
+                font-size: 12px;
+                text-decoration: none;
+                vertical-align: top;
+                height: 14px;
+                line-height: 14px;
+            }
+            span{
+                font-size: 11px;
+                color: #b3b3b3;
+                height: 14px;
+                line-height: 14px;
+            }
+            i{
+                padding-top: 6px;
+                word-break: break-all;
+            }
+
+    }
+            
+`
+const BorderedCommentsItemBody = border({
+    component:CommentsItemBody,
+    width:'0 0 1px 0'
+})
+
+
 const BorderedSoundActionContainer = border({
     component:SoundActionContainer,
     width:'0 0 1px 0'
@@ -571,4 +702,4 @@ const BorderedSoundCV = border({
     width:'0 0 1px 0'
 })
 
-export  { SoundDetailStyled,BorderedSoundActionContainer,BorderedSoundInfo,BorderedSoundDrama,BorderedSoundCV }
+export  { SoundDetailStyled,BorderedSoundActionContainer,BorderedSoundInfo,BorderedSoundDrama,BorderedSoundCV,BorderedCommentsItemBody }

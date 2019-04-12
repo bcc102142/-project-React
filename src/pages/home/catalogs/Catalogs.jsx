@@ -2,45 +2,52 @@ import React, { Component } from 'react';
 
 import { CatalogsStyled } from './CatalogsStyled'
 
-
+import { withRouter } from 'react-router-dom'
 
 class Catalogs extends Component {
+    constructor(props){
+        super(props)
+        this.click = this.click.bind(this)
+    }
+    click(value){
+        this.props.history.push('/catalogs/'+value)
+    }
     render() {
         return (
             <CatalogsStyled>
-                <a href="/catalogs/cartoon">
+                <a  onClick={()=>this.click(46)} >
                     <span className="span-img"></span>
                     <span>有声漫画</span>
                 </a>
-                <a href="/catalogs/drama">
+                <a onClick={()=>this.click('drama')}>
                     <span className="span-img"></span>
                     <span>广播剧</span>
                 </a>
-                <a href="/catalogs/music">
+                <a onClick={()=>this.click(8)}>
                     <span className="span-img"></span>
                     <span>音乐</span>
                 </a>
-                <a href="/catalogs/hypnosis">
+                <a onClick={()=>this.click(54)}>
                     <span className="span-img"></span>
                     <span>催眠</span>
                 </a>
-                <a href="/catalogs/amusement">
+                <a onClick={()=>this.click(26)}>
                     <span className="span-img"></span>
                     <span>娱乐</span>
                 </a>
-                <a href="/catalogs/dayCatch">
+                <a onClick={()=>this.click(41)}>
                     <span className="span-img"></span>
                     <span>日抓</span>
                 </a>
-                <a href="/catalogs/Lbooks">
+                <a onClick={()=>this.click(6)}>
                     <span className="span-img"></span>
                     <span>听书</span>
                 </a>
-                <a href="/catalogs/dub">
+                <a onClick={()=>this.click(52)}>
                     <span className="span-img"></span>
                     <span>配音</span>
                 </a>
-                <a href="/catalogs/ring">
+                <a onClick={()=>this.click(65)}>
                     <span className="span-img"></span>
                     <span>铃声</span>
                 </a>
@@ -50,4 +57,4 @@ class Catalogs extends Component {
     }
 }
 
-export default Catalogs;
+export default withRouter(Catalogs);

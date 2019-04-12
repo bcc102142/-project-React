@@ -4,6 +4,8 @@ import {ChannelStyled} from './ChannelStyled'
 
 import http from 'utils/fetch'
 
+import { withRouter } from 'react-router-dom'
+
 
 class Channel extends Component {
     constructor(props){
@@ -12,9 +14,12 @@ class Channel extends Component {
             data:{},
            
         }
+        this.click = this.click.bind(this)
         this.fetchHandler()
     }
-
+    click(data){
+        this.props.history.push('/item/'+data)
+    }
     render() {
         let list0 = this.state.data.music ? this.state.data.music[0].objects_point: []
         let list1 = this.state.data.music ? this.state.data.music[1].objects_point: []
@@ -28,8 +33,6 @@ class Channel extends Component {
         let that = this.state.isload
 
         return (<>
-            
-           
             
             <ChannelStyled>
                 <div className="channel-title">
@@ -47,7 +50,8 @@ class Channel extends Component {
                 <div className="channel-body">
                 {
                     list0.map((value)=>{
-                       return( <a href={"/item/"+value.id} key={value.id}>
+                       return( 
+                       <a  onClick={(data)=>this.click(value.id)} key={value.id}>
                             <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -77,7 +81,7 @@ class Channel extends Component {
             <div className="channel-body">
             {
                 list1.map((value)=>{
-                   return( <a href={"/item/"+value.id} key={value.id}>
+                   return( <a onClick={(data)=>this.click(value.id)} key={value.id} >
                         <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                         <div className="channel-body-title">{value.soundstr}</div>
                         <div className="channel-body-bottom">
@@ -107,7 +111,7 @@ class Channel extends Component {
                 <div className="channel-body">
                 {
                     list2.map((value)=>{
-                    return( <a href={"/item/"+value.id} key={value.id}>
+                    return( <a onClick={(data)=>this.click(value.id)} key={value.id}>
                             <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -137,7 +141,7 @@ class Channel extends Component {
                 <div className="channel-body">
                 {
                     list3.map((value)=>{
-                    return( <a href={"/item/"+value.id} key={value.id}>
+                    return( <a onClick={(data)=>this.click(value.id)} key={value.id}>
                             <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -167,7 +171,7 @@ class Channel extends Component {
                 <div className="channel-body">
                 {
                     list4.map((value)=>{
-                    return( <a href={"/item/"+value.id} key={value.id}>
+                    return( <a onClick={(data)=>this.click(value.id)} key={value.id}>
                             <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -197,7 +201,7 @@ class Channel extends Component {
                 <div className="channel-body">
                 {
                     list5.map((value)=>{
-                    return( <a href={"/item/"+value.id} key={value.id}>
+                    return( <a onClick={(data)=>this.click(value.id)} key={value.id}>
                             <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -227,7 +231,7 @@ class Channel extends Component {
                 <div className="channel-body">
                 {
                     list6.map((value)=>{
-                    return( <a href={"/item/"+value.id} key={value.id}>
+                    return( <a onClick={(data)=>this.click(value.id)} key={value.id}>
                             <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -257,7 +261,7 @@ class Channel extends Component {
                 <div className="channel-body">
                 {
                     list7.map((value)=>{
-                    return( <a href={"/item/"+value.id} key={value.id}>
+                    return( <a onClick={(data)=>this.click(value.id)} key={value.id}>
                             <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                             <div className="channel-body-title">{value.soundstr}</div>
                             <div className="channel-body-bottom">
@@ -287,7 +291,7 @@ class Channel extends Component {
             <div className="channel-body">
             {
                 list8.map((value)=>{
-                   return( <a href={"/item/"+value.id} key={value.id}>
+                   return( <a onClick={(data)=>this.click(value.id)} key={value.id}>
                         <img src={'//static.missevan.com/coversmini/'+value.cover_image} alt=""/>
                         <div className="channel-body-title">{value.soundstr}</div>
                         <div className="channel-body-bottom">
@@ -301,8 +305,6 @@ class Channel extends Component {
             </div>
         </ChannelStyled>
           
-
-        
         </>
            
         );
@@ -319,4 +321,4 @@ class Channel extends Component {
     }
 }
 
-export default Channel
+export default withRouter(Channel)

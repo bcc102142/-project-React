@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 
-import { SwiperStyled } from './SwiperStyled'
-
-import { Carousel, ActivityIndicator } from 'antd-mobile';
-
 import { connect } from 'react-redux'
 
 import { getDataAsync } from './actionCreater'
 
+import SwiperUI from './swiperUI'
+
 const mapState = (state) => {
   return {
-    data:state.data
+    data:state.data.data
   }
 }
 
@@ -22,7 +20,6 @@ const mapDispatch =(dispatch) =>{
     }
 } 
 
-
 class swiper extends Component {
   constructor(props){
     super(props)
@@ -32,28 +29,13 @@ class swiper extends Component {
   render() {
     let list = this.props.data.info ? this.props.data.info.banner :[]
     return (
-      <SwiperStyled>
-        <Carousel
-          infinite={true}
-          autoplay={true}
-        >
-        {
-         list.map(function(value,index){
-           return <img style={{width:"100%"}} src={value.pic} key={index} alt=""/>
-          })
-        } 
-        </Carousel>
-      </SwiperStyled>
+      <SwiperUI list={list}></SwiperUI>
     );
   }
   fetchHandler(){
     this.props.fetchHandler()
   }
-
-
 }
 
 export default connect(mapState,mapDispatch)(swiper)
 
-
-// export default swiper;

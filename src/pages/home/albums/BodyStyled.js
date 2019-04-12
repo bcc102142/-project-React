@@ -12,7 +12,7 @@ align-items: center;
 display: flex;
 justify-content: space-between;
 }
-li{
+a{
     
     display: flex;
     flex-direction:column;

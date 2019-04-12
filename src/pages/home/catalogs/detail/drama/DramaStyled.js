@@ -2,6 +2,7 @@ import Styled from 'styled-components'
 
 const DramaStyled = Styled.div`
 padding:0 .14rem
+flex:1 0 auto;
     .drama-head{
         padding:.14rem 0
         font-size:.16rem

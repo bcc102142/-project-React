@@ -21,7 +21,16 @@ module.exports = function(app) {
     proxy('/dramaapi', { 
       target: 'https://www.missevan.com/',
       changeOrigin: true,
-    })
+    }),
+    proxy('/site', { 
+      target: 'https://www.missevan.com/',
+      changeOrigin: true,
+    }),
+
+    proxy('/api', { 
+      target: 'http://localhost:3000/',
+      changeOrigin: true,
+    }),
     
   )
 }

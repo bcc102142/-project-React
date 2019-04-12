@@ -1,17 +1,17 @@
+import { combineReducers } from 'redux'
 
-const defaultState ={
-    data:{}
-}
 
-const reducer = (state = defaultState,action) => {
-    switch(action.type){
-        case 'get' :
-            return {
-                ...state,
-                data:action.data
-            }
-        default : return state
-    }
-}
 
-export default reducer
+import { reducer as data } from 'pages/home/recommend/swiper/reducer'
+import { reducer as catalogsData } from 'pages/home/catalogs/detail/other/reducer'
+import { reducer as isLogin } from 'pages/home/reducer'
+import { reducer as urlParams } from 'pages/home/search/reducer'
+
+
+
+export default combineReducers({
+    data,
+    catalogsData,
+    isLogin,
+    urlParams
+  })

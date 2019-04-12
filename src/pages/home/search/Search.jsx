@@ -2,19 +2,35 @@ import React, { Component } from 'react';
 
 import http from 'utils/fetch'
 
-import { SearchStyled,HotSearch,BorderHotSearch,Bordera } from './SearchStyled'
+import SearchUI from './SearchUI'
+
+import { connect }  from  'react-redux'
+ 
+import { withRouter } from 'react-router-dom'
+
+ const mapDispatch = (dispatch)=>{
+     return {
+        setUrlParams(params){
+            dispatch({
+                type:"getParams",
+                urlParams:params
+            })
+        }
+     }
+ }
 
 class Search extends Component {
     constructor(props){
         super(props)
         this.state ={
-            list : []
+            list : [],
+            isload:false
         }
+        this.click = this.click.bind(this)
         this.fetchHandler()
     }
    async fetchHandler(){
         let data = await http.get('/mobileWeb/hotsearch')
-        // let a = await http.get('/dramaapi/search?s=撒野&p=1')
         this.setState({
             list:data.info,
             isload :false
@@ -24,30 +40,17 @@ class Search extends Component {
             })
         })
     }
+    click(e){
+        this.props.setUrlParams(e)
+        this.props.history.push('/searchItem/'+e)
+        window.location.reload()
+
+    }
     render() {
         return (
-            <SearchStyled>
-                {
-                    this.state.isload ? (
-                        <div>
-                        <HotSearch><BorderHotSearch>热门搜索</BorderHotSearch></HotSearch>
-                        <div className="searchContent">
-                        {
-                            this.state.list.map(function(value){
-                                return (
-                                    // <Bordera href={"/searchItem/"+value.key} key={value.key}>{value.key}</Bordera>
-                                    <Bordera href={'/searchItem?s='+value.key+'&t=drama'} key={value.key}>{value.key}</Bordera>
-                                )
-                            })
-                        }
-                        </div>
-                        </div>):(<img src="https://static.missevan.com/mimages/201603/29/f6b4a63596f56f2bc77d4fb467cab85c160911.gif
-                " alt=""/>)
-                }
-              
-            </SearchStyled>
+            <SearchUI {...this.state} click={this.click}></SearchUI>
         );
     }
 }
 
-export default Search;
+export default withRouter(connect(null,mapDispatch)(Search));

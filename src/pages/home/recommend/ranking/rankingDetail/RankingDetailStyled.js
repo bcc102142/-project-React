@@ -3,6 +3,7 @@ import border from 'components/styled/border.js'
 
 
 const RankingDetailStyled = Styled.div`
+flex:1 0 auto;
 .rankDetailHead{
    height:1.5rem;
    padding:.1rem;
@@ -10,6 +11,7 @@ const RankingDetailStyled = Styled.div`
    position:relative;
    display:flex;
    align-items:center;
+   
         .rankDtailHeadImgBox{
                 width:1.1rem;
                 height:1.1rem;

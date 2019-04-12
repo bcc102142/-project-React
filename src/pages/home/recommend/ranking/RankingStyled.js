@@ -2,8 +2,7 @@ import Styled from 'styled-components'
 
 
 const RankingStyled = Styled.div`
-
-
+flex:1 0 auto;
 .detail-head{
     display: block;
     line-height: .4rem;

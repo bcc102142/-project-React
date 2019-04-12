@@ -3,9 +3,14 @@ import Styled from 'styled-components'
 import border from 'components/styled/border'
 
 const OtherStyled = Styled.div`
+flex:1 0 auto;
+
 .other-box{
+    
         padding:0 .15rem
-        
+        .bcroll{
+            style={{height:"6rem"}}
+        }
     .channel-title{
         height: .24rem;
         line-height: .4rem;
@@ -159,10 +164,6 @@ const OtherStyled = Styled.div`
 
     }
 }
-
-
-
-
 `
 const otherHead =Styled.ul`
     padding:0 .1rem
@@ -175,9 +176,12 @@ const otherHead =Styled.ul`
     overflow-y: hidden;
     white-space: nowrap;
     display:flex;
+    position: sticky !important;
+    top:.85rem;
+    z-index:333;
     li{
         padding: 0 .05rem
-        span{
+        a{
             color:#9e9e9e;
             height: 20px;
             position: relative;

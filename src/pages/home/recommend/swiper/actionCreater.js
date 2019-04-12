@@ -10,7 +10,7 @@ import http from 'utils/fetch'
 
  export const getDataAsync = () => {
 
-    return async (dispatch) =>{
+    return async(dispatch) =>{
        let data = await http.get("/mobileWeb/newHomepage3")
        dispatch(getDataSync(data))
     }

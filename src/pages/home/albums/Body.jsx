@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 
 import { BodyStyled } from  './BodyStyled'
 
+import {withRouter } from 'react-router-dom'
+
+import $ from 'jquery'
 
 import Masonry from 'react-masonry-component';
 const masonryOptions = {
-    transitionDuration: 0
+    transitionDuration: 10,
+    // columnWidth: 200,
 };
  
 const imagesLoadedOptions = { background: '.my-bg-image-el' }
@@ -14,15 +18,24 @@ const imagesLoadedOptions = { background: '.my-bg-image-el' }
 class Head extends Component {
     constructor(props){
         super(props)
+        this.click = this.click.bind(this)
+    }
+    click(data){
+        this.props.history.push('/album/'+data)
+    }
+    compementDidMount(){
+        
+        // $('.grid').masonry({
+        //     columnWidth: 200,
+        //     itemSelector: '.grid-item'
+        //   });
     }
     render() {
-        
-        console.log(this.props)
-
         let list = this.props.data.albums ? this.props.data.albums : []
+       let that = this
         const childElements = list.map(function(value){
             return (
-                <li style={{width:"1.63rem",borderRadius:"20px",paddingTop: ".1rem",transform:"scaleY(0.5)"}}  key={value.id}>
+                <a onClick={(data)=>that.click(value.id)} style={{width:"1.63rem",borderRadius:"20px",paddingTop: ".1rem",transform:"scaleY(0.5)"}}  key={value.id}>
                 <img className="masonry-img" style={{ borderRadius:"20px"}} src={value.front_cover} alt=""/>
                     <div className="img-box">
                             <div className="sound-num">
@@ -30,12 +43,24 @@ class Head extends Component {
                         </div>
                         </div>
                     <div className="sound.title">{value.title}</div>
-                </li>
+                </a>
              );
          });
        
         return (
             <BodyStyled>
+
+                {/* <div className="grid">
+                    {
+                        <div className="grid">
+                            <div className="grid-item"></div>
+                            <div className="grid-item"></div>
+                            
+                        </div>
+                    }
+                       
+                </div> */}
+
                 <Masonry
                 className={'my-gallery-class'} // default ''
                 elementType={'ul'} // default 'div'
@@ -43,41 +68,14 @@ class Head extends Component {
                 disableImagesLoaded={false} // default false
                 updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
                 imagesLoadedOptions={imagesLoadedOptions} // default {}
-                // onLayoutComplete={function(){
-
-                //    let img = document.getElementsByClassName('masonry-img')
-                //     let imglist = Array.from(img)
-                //     // console.log(imglist)
-                //    imglist.map(
-                //        (item)=>{
-                //         return item.style.height = item.style.naturalHeight*0.5
-                //    }
-                //    )
-                // }}
+      
             >
                 {childElements}
-            </Masonry>
+                </Masonry>
             </BodyStyled>
-            // <BodyStyled>
-            //     {
-            //        list.map((value)=>{
-            //             return (
-                           
-            //                 <a href="#" key={value.id}>
-            //                     <div className="img-box">
-            //                         <img style={{width:"100%"}} src={value.front_cover} alt=""/>
-            //                         <div className="sound-num">
-            //                             <span>116</span>
-            //                         </div>
-            //                     </div>
-            //                     <div className="sound.title">{value.title}</div>
-            //                 </a>
-            //             )
-            //        }) 
-            //     }
-            // </BodyStyled>
+            
         );
     }
 }
 
-export default Head;
+export default withRouter(Head);

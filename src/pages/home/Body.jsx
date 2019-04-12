@@ -19,7 +19,7 @@ const tabs = [
 ];
 
 const TabExample = () => (
-  <div className="flex1" >
+  <div className="flex1" style={{flex:'0 0 auto'}}>
     <StickyContainer >
       <Tabs tabs={tabs}
         initialPage={1}
