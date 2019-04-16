@@ -19,6 +19,15 @@ const reducer = (state=defaultState,action) => {
                 ...state,
                 likeList:list
             }
+        case 'deleteLikeItem' :
+        let dlist = [...state.likeList]
+        dlist = dlist.filter(value=>{
+            return value !== action.likeItem
+        })
+        return{
+            ...state,
+            likeList:dlist
+        }
         default : return state
     }
 }

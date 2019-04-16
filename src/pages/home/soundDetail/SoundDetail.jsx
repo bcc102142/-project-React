@@ -35,6 +35,12 @@ const mapDispatch = (dispatch)=>{
                 type : 'getLikeList',
                 likeList:data
             })
+        },
+        deleteLikeItem(item){
+            dispatch({
+                type : 'deleteLikeItem',
+                likeItem:item
+            })
         }
     }
 }
@@ -98,23 +104,21 @@ class SoundDetail extends Component {
        }else{
             List = this.props.likeList.length !== 0 ? this.props.likeList : JSON.parse(localStorage.getItem('likeList'))
        }
-       console.log(List)
-    //    console.log(List,JSON.parse(localStorage.getItem('likeList')))
        let arr = List.filter(value=>{
             return value.id === this.state.data1.sound.id
         })
+        console.log(List)
         if(arr.length>0) {
-            await this.deteleItem({itemId:this.state.data1.sound.id,...this.props.info});
-             let curList = JSON.parse(localStorage.getItem('likeList'))
-             let newList = curList.filter(value=>{
+            await this.deteleItem({itemId:this.state.data1.sound.id,...this.props.info});//数据库删
+            this.props.deleteLikeItem(this.state.data1.sound)//状态删
+            let curList = JSON.parse(localStorage.getItem('likeList'))//本地删
+            let newList = curList.filter(value=>{
                 return value.id !== this.state.data1.sound.id //删掉目标
              })
-             console.log(newList)
             localStorage.setItem('likeList' , JSON.stringify(newList))
             this.setState({
                 islike:false
             })
-            
         }else{
             this.successToast()
             this.setState({
@@ -122,22 +126,18 @@ class SoundDetail extends Component {
             })
             let data = await this.updateItem({itemId:this.state.data1.sound.id,...this.props.info});
             //重新获取数据丢到数组
-               
+            this.props.setLikeList(this.state.data1.sound)//状态加
                 if(this.props.info.like){
-                    
                     let arr = [this.state.data1.sound]
-                    
                     if(!JSON.parse(localStorage.getItem('likeList'))){
                         localStorage.setItem('likeList',JSON.stringify([this.state.data1.sound]) )
                     }
-                    console.log(arr)
                     this.props.info.like.map(async(value)=>{
                         let url = '/sound/getsound?soundid='+value.list_id
                         let data = await http.get(url)
                         arr.push(data.info.sound)
                         this.props.getLikeList(arr)
                         localStorage.setItem('likeList',JSON.stringify(arr) )
-                        // this.props.setLikeList(value.list_id)
                     })
                 }
             
