@@ -104,7 +104,16 @@ class SoundDetail extends Component {
             return value.id === this.state.data1.sound.id
         })
         if(arr.length>0) {
-            this.failToast()
+            await this.deteleItem({itemId:this.state.data1.sound.id,...this.props.info});
+             let curList = JSON.parse(localStorage.getItem('likeList'))
+             let newList = curList.filter(value=>{
+                return value.id !== this.state.data1.sound.id //删掉目标
+             })
+             console.log(newList)
+            localStorage.setItem('likeList' , JSON.stringify(newList))
+            this.setState({
+                islike:false
+            })
             
         }else{
             this.successToast()
@@ -135,6 +144,7 @@ class SoundDetail extends Component {
            
         }
     }
+    //填充爱心
     updateItem = (data) => {
         return request({
             url:'/api/v1/users/item',
@@ -149,6 +159,17 @@ class SoundDetail extends Component {
         this.props.history.push("/item/"+data)
         window.location.reload()
         
+    }
+    //取消爱心
+    deteleItem = (data) => {
+        return request({
+            url:'/api/v1/users/itemdelete',
+            data,
+            type:'put',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded'
+            }
+        })
     }
    async fetchHandler(){
         let url = '/sound/getsound?soundid='+this.props.match.params.id

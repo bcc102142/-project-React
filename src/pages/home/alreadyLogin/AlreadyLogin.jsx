@@ -10,6 +10,8 @@ import {withRouter} from 'react-router-dom'
 
 import http from 'utils/fetch'
 
+import request from 'utils/request';
+
 const mapState = (state)=>{
     return {
         info : state.isLogin.info
@@ -41,7 +43,6 @@ class AlreadyLogin extends Component {
         this.changePassword = this.changePassword.bind(this)
         this.click = this.click.bind(this)
         
-        
        
     }
     click(data){
@@ -71,13 +72,12 @@ class AlreadyLogin extends Component {
         this.props.history.push("/changePassword")
     }
    
+   
     render() {
         let likeList = this.props.info.like ? this.props.info.like :[]
-        // console.log(likeList)
         
         if(localStorage.getItem('likeList')){
             this.fetchHandler()
-            // console.log(JSON.parse(localStorage.getItem('likeList')))
         }
         return (
             <AlreadyLoginStyle>
@@ -90,7 +90,7 @@ class AlreadyLogin extends Component {
                 </div>
                 <div className="userList">
                     <ul>
-                        <li>
+                        <li >
                             <p>0</p>
                             <span>声音</span>
                         </li>
