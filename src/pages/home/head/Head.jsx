@@ -99,7 +99,7 @@ class Head extends Component {
             display:'none'
         })
         this.props.history.push("/searchItem/"+ encodeURIComponent(value))
-        window.location.reload()
+        // window.location.reload()
     }
     loginHandler(data){
         this.setState({

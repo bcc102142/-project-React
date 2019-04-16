@@ -498,15 +498,18 @@ const SoundActionContainer = Styled.div`
                     }
                 }
                 .like{
-                    &::after{
-                        background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons-sound@2x.50e9596e.png');
-                        background-size: 110px 102px;
-                        background-position: -22px -60px;
+                        background-image: url('//static.missevan.com/assets/m/images/build/sprite-icons@2x.19298711.png');
+                        background-size: 261px 235px;
+                        background-position:${ props => props.islike ?  '-37px -146px' : '0 -146px' }
+                        width: .35rem;
+                        height: .35rem;
+                    /* &::after{
+                       
                         content: "";
                         display: block;
                         height: 100%;
                         background-repeat: no-repeat;
-                    }
+                    } */
                 }
                 .download{
                     &::after{

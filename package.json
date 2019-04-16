@@ -17,6 +17,7 @@
     "react-image-layout": "^1.0.0",
     "react-masonry-component": "^6.2.1",
     "react-redux": "^6.0.1",
+    "react-responsive-masonry": "^2.0.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-sticky": "^6.0.3",

@@ -14,6 +14,8 @@ import BScroll from 'better-scroll'
 
 import _ from 'lodash'
 
+import { withRouter } from 'react-router-dom'
+
 const mapState = (state)=>{
     return {
         data:state.catalogsData.data
@@ -41,6 +43,7 @@ class Other extends Component {
             isload:false,
             index :0
         }
+        this.itemClickHandler = this.itemClickHandler.bind(this)
         this.fetchHandler()
         this.bool = false
     }
@@ -48,6 +51,9 @@ class Other extends Component {
         this.setState({
             index:index
         })
+    }
+    itemClickHandler(data){
+       this.props.history.push('/item/'+data)
     }
     async fetchHandler(){
         this.props.getDataHandler()
@@ -132,7 +138,7 @@ class Other extends Component {
         //    }
         // })
         return (
-            <OtherUI {...this.state} navclick={(value,arr)=>{ this.handleNavClick(value,arr) }} click={(index)=>{ this.clickHandler(index) }} son={son}></OtherUI>
+            <OtherUI {...this.state} itemClick={this.itemClickHandler} navclick={(value,arr)=>{ this.handleNavClick(value,arr) }} click={(index)=>{ this.clickHandler(index) }} son={son}></OtherUI>
         );
         // return (
         //     <OtherStyled>
@@ -244,4 +250,4 @@ class Other extends Component {
     }
 }
 
-export default connect(mapState,mapDispatch)(Other) ;
+export default withRouter(connect(mapState,mapDispatch)(Other)) ;

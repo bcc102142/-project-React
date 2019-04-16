@@ -50,7 +50,7 @@ export default (props) =>{
                                let s = Math.floor((value.duration - m*1000*60)/1000)
                                 s = s <10 ? "0"+s : s
                                 return (
-                                    <a href="#" key={value.id}>
+                                    <a onClick={()=>props.itemClick(value.id)}  key={value.id}>
                                 <div className="img-box"><img style={{
                                     height:".7rem",width:".7rem"
                                 }} src={value.front_cover} alt=""/></div>
@@ -90,7 +90,7 @@ export default (props) =>{
                                    let s = Math.floor((value.duration - m*1000*60)/1000)
                                     s = s <10 ? "0"+s : s
                                     return (
-                                        <a href="#" key={value.id}>
+                                        <a onClick={()=>props.itemClick(value.id)} key={value.id}>
                                     <div className="img-box"><img style={{
                                         height:".7rem",width:".7rem"
                                     }} src={value.front_cover} alt=""/></div>

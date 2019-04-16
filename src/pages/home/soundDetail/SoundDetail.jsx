@@ -10,11 +10,32 @@ import { connect } from 'react-redux'
 
 import request from 'utils/request';
 
+import { Toast, WhiteSpace, WingBlank, Button } from 'antd-mobile';
+import { isArray } from 'util';
+
 // import DetailComment from "./DetailComment/DetailComment"
 
 const mapState = (state)=>{
     return {
-        info : state.isLogin.info
+        info : state.isLogin.info,
+        likeList:state.likeList.likeList,
+    }
+}
+
+const mapDispatch = (dispatch)=>{
+    return {
+        setLikeList(data){
+            dispatch({
+                type : 'setLikeList',
+                likeItem:data
+            })
+        },
+        getLikeList(data){
+            dispatch({
+                type : 'getLikeList',
+                likeList:data
+            })
+        }
     }
 }
 
@@ -30,7 +51,8 @@ class SoundDetail extends Component {
             isload:false,
             index:0,
             comments:{},
-            imgList:[]
+            imgList:[],
+            islike:false
         }
         this.clickHandler = this.clickHandler.bind(this)
         this.clickCVHandler = this.clickCVHandler.bind(this)
@@ -38,22 +60,82 @@ class SoundDetail extends Component {
         this.click = this.click.bind(this)
         this.likeClick = this.likeClick.bind(this)
         this.fetchHandler()
-    }
-   async likeClick(){
-        //发送存的请求
-        //放用户信息
-        // let params = { ...this.props.info}
-        // console.log(params)
-        // params.like.push(this.state.data1.sound.id)
-        //去重
-        //  params.like = Array.from(new Set(params.like))
         
-        let data = await this.updateItem({itemId:this.state.data1.sound.id,...this.props.info});
-
-        // console.log(this.state.data1.sound.id)
-
+       
     }
-    updateItem=(data)=>{
+    jugislike(){
+       let likeList = JSON.parse(localStorage.getItem('likeList')) ? JSON.parse(localStorage.getItem('likeList')):[]
+     
+        
+
+        let arrlist = likeList.filter(value=>{
+            return value.id === this.state.data1.sound.id
+        })
+        if(arrlist.length>0) {
+            this.setState({
+                islike:true
+            })
+        }
+    }
+    successToast() {
+        Toast.success('喜欢成功!!!', 1);
+      }
+      
+      failToast() {
+        Toast.fail('喜欢过了!!!', 1);
+      }
+      
+   async likeClick() {
+       if(Object.keys(this.props.info).length===0){
+           //没登陆跳转到登陆
+            this.props.history.push('/login')
+           return false
+       } 
+       let List = []
+       //放用户信息,遍历是不是已经喜欢
+       if(!JSON.parse(localStorage.getItem('likeList'))){
+          
+       }else{
+            List = this.props.likeList.length !== 0 ? this.props.likeList : JSON.parse(localStorage.getItem('likeList'))
+       }
+       console.log(List)
+    //    console.log(List,JSON.parse(localStorage.getItem('likeList')))
+       let arr = List.filter(value=>{
+            return value.id === this.state.data1.sound.id
+        })
+        if(arr.length>0) {
+            this.failToast()
+            
+        }else{
+            this.successToast()
+            this.setState({
+                islike:true
+            })
+            let data = await this.updateItem({itemId:this.state.data1.sound.id,...this.props.info});
+            //重新获取数据丢到数组
+               
+                if(this.props.info.like){
+                    
+                    let arr = [this.state.data1.sound]
+                    
+                    if(!JSON.parse(localStorage.getItem('likeList'))){
+                        localStorage.setItem('likeList',JSON.stringify([this.state.data1.sound]) )
+                    }
+                    console.log(arr)
+                    this.props.info.like.map(async(value)=>{
+                        let url = '/sound/getsound?soundid='+value.list_id
+                        let data = await http.get(url)
+                        arr.push(data.info.sound)
+                        this.props.getLikeList(arr)
+                        localStorage.setItem('likeList',JSON.stringify(arr) )
+                        // this.props.setLikeList(value.list_id)
+                    })
+                }
+            
+           
+        }
+    }
+    updateItem = (data) => {
         return request({
             url:'/api/v1/users/item',
             data,
@@ -93,6 +175,7 @@ class SoundDetail extends Component {
             comments:comments,
             imgList:imgList
         },function(){
+            this.jugislike()//进入时判断是否喜欢
             this.setState({
                 isload:true
             })
@@ -113,7 +196,7 @@ class SoundDetail extends Component {
         let num = this.state.comments.successVal ? this.state.comments.successVal.comment.num :''
         let commentList = this.state.comments.successVal ? this.state.comments.successVal.comment.Datas :[]
         let imgList = this.state.imgList.info ? this.state.imgList.info :[]
-
+        
         return (
             <SoundDetailStyled value={this.state.value}>
                 {
@@ -135,7 +218,7 @@ class SoundDetail extends Component {
                 </div>
                 <div className="soundPlayerBg" style={{background:`url(${sound.front_cover})` }}> </div>
             </div>
-            <BorderedSoundActionContainer >
+            <BorderedSoundActionContainer {...this.state}>
                 <ul>
                     <li><i className="share"></i><span>分享</span></li>
                     <li><i className="like"  onClick={this.likeClick}></i><span>喜欢</span></li>
@@ -364,4 +447,4 @@ class SoundDetail extends Component {
 
 }
 
-export default withRouter(connect(mapState)(SoundDetail));
+export default withRouter(connect(mapState,mapDispatch)(SoundDetail));

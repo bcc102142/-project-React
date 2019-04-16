@@ -8,8 +8,8 @@ import $ from 'jquery'
 
 import Masonry from 'react-masonry-component';
 const masonryOptions = {
-    transitionDuration: 10,
-    // columnWidth: 200,
+    originTop: true,
+    
 };
  
 const imagesLoadedOptions = { background: '.my-bg-image-el' }
@@ -23,8 +23,8 @@ class Head extends Component {
     click(data){
         this.props.history.push('/album/'+data)
     }
-    compementDidMount(){
-        
+    componentDidMount(){
+        // console.log($('.grid'))
         // $('.grid').masonry({
         //     columnWidth: 200,
         //     itemSelector: '.grid-item'
@@ -50,18 +50,8 @@ class Head extends Component {
         return (
             <BodyStyled>
 
-                {/* <div className="grid">
-                    {
-                        <div className="grid">
-                            <div className="grid-item"></div>
-                            <div className="grid-item"></div>
-                            
-                        </div>
-                    }
-                       
-                </div> */}
 
-                <Masonry
+               <Masonry
                 className={'my-gallery-class'} // default ''
                 elementType={'ul'} // default 'div'
                 options={masonryOptions} // default {}
@@ -71,7 +61,7 @@ class Head extends Component {
       
             >
                 {childElements}
-                </Masonry>
+                </Masonry> 
             </BodyStyled>
             
         );

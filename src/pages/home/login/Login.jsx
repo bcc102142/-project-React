@@ -71,6 +71,7 @@ class Login extends Component {
                     that.props.history.push("/alreadyLogin") 
                     window.location.reload()
                    },1000)
+                  
                 }else{
                     that.renderLoginError(res)
                 }
